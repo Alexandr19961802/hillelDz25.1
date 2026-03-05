@@ -1,134 +1,53 @@
-import React, { Component } from "react";
+import React from "react";
 
-export default class App extends Component {
-  constructor(props) {
-    super(props);
+function Hello(props) {
+  return <h1>Hello {props.name}</h1>;
+}
 
-    const savedVotes = JSON.parse(localStorage.getItem("votes"));
+export default function App() {
 
-    this.state = {
-      votes: savedVotes || {
-        1: 0,
-        2: 0,
-        3: 0,
-        4: 0,
-        5: 0,
-      },
-      winner: null,
-    };
-  }
+  const elJSX = <h1>Hello Alex</h1>;
+  const elNoJSX = React.createElement("h1", null, "Hello Alex");
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.votes !== this.state.votes) {
-      localStorage.setItem("votes", JSON.stringify(this.state.votes));
-    }
-  }
+  console.log(elJSX);
+  console.log(elNoJSX);
 
-  handleVote = (id) => {
-    this.setState((prevState) => ({
-      votes: {
-        ...prevState.votes,
-        [id]: prevState.votes[id] + 1,
-      },
-    }));
-  };
+  const card = (
+    <div className="card">
+      <h2>Title</h2>
+      <p>Text</p>
+    </div>
+  );
 
-  showResults = () => {
-    const { votes } = this.state;
+  console.log(card);
 
-    let maxVotes = -1;
-    let winnerId = null;
+  const movies = [
+    { id: 1, title: "Interstellar", year: 2014 },
+    { id: 2, title: "Inception", year: 2010 },
+    { id: 3, title: "Matrix", year: 1999 },
+  ];
 
-    Object.entries(votes).forEach(([id, count]) => {
-      if (count > maxVotes) {
-        maxVotes = count;
-        winnerId = id;
-      }
-    });
+  const isLoggedIn = false;
 
-    this.setState({
-      winner: {
-        id: winnerId,
-        count: maxVotes,
-      },
-    });
-  };
+  return (
+    <div>
 
-  clearResults = () => {
-    const emptyVotes = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+      <Hello name="Alex" />
 
-    localStorage.removeItem("votes");
+      {elJSX}
 
-    this.setState({
-      votes: emptyVotes,
-      winner: null,
-    });
-  };
+      {card}
 
-  render() {
-    const { votes, winner } = this.state;
+      <ul>
+        {movies.map(movie => (
+          <li key={movie.id}>
+            {movie.title} ({movie.year})
+          </li>
+        ))}
+      </ul>
 
-    const emojis = {
-      1: "😀",
-      2: "😊",
-      3: "😎",
-      4: "🤩",
-      5: "😍",
-    };
+      {isLoggedIn ? <h2>Welcome!</h2> : <h2>Please log in</h2>}
 
-    return (
-      <div style={{ textAlign: "center", padding: "40px" }}>
-        <h1>Голосування за найкращий смайлик</h1>
-
-        <div style={{ fontSize: "50px", marginBottom: "20px" }}>
-          {Object.entries(emojis).map(([id, emoji]) => (
-            <span
-              key={id}
-              onClick={() => this.handleVote(id)}
-              style={{ cursor: "pointer", margin: "0 15px" }}
-            >
-              {emoji}
-              <div style={{ fontSize: "20px" }}>{votes[id]}</div>
-            </span>
-          ))}
-        </div>
-
-        <button
-          onClick={this.showResults}
-          style={{
-            padding: "10px 20px",
-            margin: "10px",
-            background: "green",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-          }}
-        >
-          Show Results
-        </button>
-
-        <button
-          onClick={this.clearResults}
-          style={{
-            padding: "10px 20px",
-            margin: "10px",
-            background: "red",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-          }}
-        >
-          Очистити результати
-        </button>
-
-        {winner && (
-          <div style={{ marginTop: "30px" }}>
-            <h2>Переможець:</h2>
-            <div style={{ fontSize: "60px" }}>{emojis[winner.id]}</div>
-            <h3>Кількість голосів: {winner.count}</h3>
-          </div>
-        )}
-      </div>
-    );
-  }
+    </div>
+  );
 }
