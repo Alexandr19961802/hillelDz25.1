@@ -1,53 +1,58 @@
-import React from "react";
-
-function Hello(props) {
-  return <h1>Hello {props.name}</h1>;
-}
+import React, { useState } from "react";
 
 export default function App() {
+  const [todos, setTodos] = useState([
+    { text: "Купить хлеб", done: false },
+    { text: "Сделать домашку", done: true },
+  ]);
 
-  const elJSX = <h1>Hello Alex</h1>;
-  const elNoJSX = React.createElement("h1", null, "Hello Alex");
+  const [value, setValue] = useState("");
 
-  console.log(elJSX);
-  console.log(elNoJSX);
+  const addTodo = () => {
+    if (value.trim() === "") return;
 
-  const card = (
-    <div className="card">
-      <h2>Title</h2>
-      <p>Text</p>
-    </div>
-  );
+    setTodos([
+      ...todos,
+      { text: value, done: false }
+    ]);
 
-  console.log(card);
+    setValue("");
+  };
 
-  const movies = [
-    { id: 1, title: "Interstellar", year: 2014 },
-    { id: 2, title: "Inception", year: 2010 },
-    { id: 3, title: "Matrix", year: 1999 },
-  ];
-
-  const isLoggedIn = false;
+  const toggleTodo = (index) => {
+    const newTodos = [...todos];
+    newTodos[index].done = !newTodos[index].done;
+    setTodos(newTodos);
+  };
 
   return (
-    <div>
+    <div style={{ padding: 20 }}>
+      <h1>Todo List</h1>
 
-      <Hello name="Alex" />
+      {todos.map((todo, index) => (
+        <div
+          key={index}
+          onClick={() => toggleTodo(index)}
+          style={{
+            cursor: "pointer",
+            textDecoration: todo.done ? "line-through" : "none"
+          }}
+        >
+          {todo.text}
+        </div>
+      ))}
 
-      {elJSX}
+      <div style={{ marginTop: 20 }}>
+        <input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Новая задача"
+        />
 
-      {card}
-
-      <ul>
-        {movies.map(movie => (
-          <li key={movie.id}>
-            {movie.title} ({movie.year})
-          </li>
-        ))}
-      </ul>
-
-      {isLoggedIn ? <h2>Welcome!</h2> : <h2>Please log in</h2>}
-
+        <button onClick={addTodo}>
+          Добавить
+        </button>
+      </div>
     </div>
   );
 }
