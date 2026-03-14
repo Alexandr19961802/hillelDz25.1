@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { Container, Form, Button, ListGroup } from "react-bootstrap";
 
 export default function App() {
   const [todos, setTodos] = useState([
@@ -9,13 +10,9 @@ export default function App() {
   const [value, setValue] = useState("");
 
   const addTodo = () => {
-    if (value.trim() === "") return;
+    if (!value.trim()) return;
 
-    setTodos([
-      ...todos,
-      { text: value, done: false }
-    ]);
-
+    setTodos([...todos, { text: value, done: false }]);
     setValue("");
   };
 
@@ -26,33 +23,35 @@ export default function App() {
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Todo List</h1>
+    <Container className="mt-5" style={{ maxWidth: "500px" }}>
+      <h2 className="mb-4 text-center">Todo List</h2>
 
-      {todos.map((todo, index) => (
-        <div
-          key={index}
-          onClick={() => toggleTodo(index)}
-          style={{
-            cursor: "pointer",
-            textDecoration: todo.done ? "line-through" : "none"
-          }}
-        >
-          {todo.text}
-        </div>
-      ))}
+      <ListGroup>
+        {todos.map((todo, index) => (
+          <ListGroup.Item
+            key={index}
+            onClick={() => toggleTodo(index)}
+            style={{
+              cursor: "pointer",
+              textDecoration: todo.done ? "line-through" : "none"
+            }}
+          >
+            {todo.text}
+          </ListGroup.Item>
+        ))}
+      </ListGroup>
 
-      <div style={{ marginTop: 20 }}>
-        <input
+      <Form className="mt-4">
+        <Form.Control
+          placeholder="Новая задача"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder="Новая задача"
         />
 
-        <button onClick={addTodo}>
+        <Button className="mt-3 w-100" onClick={addTodo}>
           Добавить
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Form>
+    </Container>
   );
 }
