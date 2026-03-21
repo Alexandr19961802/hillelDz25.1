@@ -1,57 +1,32 @@
-import { useState } from "react";
-import { Container, Form, Button, ListGroup } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
 
-export default function App() {
-  const [todos, setTodos] = useState([
-    { text: "Купить хлеб", done: false },
-    { text: "Сделать домашку", done: true },
-  ]);
-
-  const [value, setValue] = useState("");
-
-  const addTodo = () => {
-    if (!value.trim()) return;
-
-    setTodos([...todos, { text: value, done: false }]);
-    setValue("");
-  };
-
-  const toggleTodo = (index) => {
-    const newTodos = [...todos];
-    newTodos[index].done = !newTodos[index].done;
-    setTodos(newTodos);
-  };
+function App() {
+  const value = useSelector((state) => state.value);
+  const dispatch = useDispatch();
 
   return (
-    <Container className="mt-5" style={{ maxWidth: "500px" }}>
-      <h2 className="mb-4 text-center">Todo List</h2>
+    <div className="container text-center mt-5">
+      <div className="card p-4 mx-auto" style={{ width: "300px" }}>
+        <h2 className="mb-4">Value: {value}</h2>
 
-      <ListGroup>
-        {todos.map((todo, index) => (
-          <ListGroup.Item
-            key={index}
-            onClick={() => toggleTodo(index)}
-            style={{
-              cursor: "pointer",
-              textDecoration: todo.done ? "line-through" : "none"
-            }}
+        <div>
+          <button
+            className="btn btn-success me-2"
+            onClick={() => dispatch({ type: "PLUS" })}
           >
-            {todo.text}
-          </ListGroup.Item>
-        ))}
-      </ListGroup>
+            +
+          </button>
 
-      <Form className="mt-4">
-        <Form.Control
-          placeholder="Новая задача"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-        />
-
-        <Button className="mt-3 w-100" onClick={addTodo}>
-          Добавить
-        </Button>
-      </Form>
-    </Container>
+          <button
+            className="btn btn-danger"
+            onClick={() => dispatch({ type: "MINUS" })}
+          >
+            -
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
+
+export default App;
