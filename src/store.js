@@ -1,43 +1,27 @@
-import { createStore } from "redux";
+import { createStore, applyMiddleware } from "redux";
+import { thunk } from "redux-thunk";
 
 const initialState = {
-  todos: [
-    { id: 1, text: "Redux", done: false },
-    { id: 2, text: "React", done: false },
-    { id: 3, text: "JS", done: false },
-  ],
+  data: null,
+  loading: false,
 };
 
 function reducer(state = initialState, action) {
   switch (action.type) {
-    case "ADD_TODO":
-      return {
-        ...state,
-        todos: [
-          ...state.todos,
-          {
-            id: Date.now(),
-            text: action.payload,
-            done: false,
-          },
-        ],
-      };
+    case "FETCH_START":
+      return { ...state, loading: true };
 
-    case "TOGGLE_TODO":
-      return {
-        ...state,
-        todos: state.todos.map((todo) =>
-          todo.id === action.payload
-            ? { ...todo, done: !todo.done }
-            : todo
-        ),
-      };
+    case "FETCH_SUCCESS":
+      return { data: action.payload, loading: false };
+
+    case "CLEAR":
+      return { data: null, loading: false };
 
     default:
       return state;
   }
 }
 
-const store = createStore(reducer);
+const store = createStore(reducer, applyMiddleware(thunk));
 
 export default store;

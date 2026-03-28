@@ -1,78 +1,53 @@
-import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function App() {
-  const todos = useSelector((state) => state.todos);
   const dispatch = useDispatch();
-  const [value, setValue] = useState("");
+  const { data, loading } = useSelector((state) => state);
 
-  const addTodo = () => {
-    if (!value.trim()) return;
+  const fetchData = () => {
+    dispatch(async (dispatch) => {
+      dispatch({ type: "FETCH_START" });
 
-    dispatch({
-      type: "ADD_TODO",
-      payload: value,
+      const res = await fetch("https://swapi.py4e.com/api/people/1/");
+      const json = await res.json();
+
+      dispatch({
+        type: "FETCH_SUCCESS",
+        payload: json,
+      });
     });
-
-    setValue("");
   };
 
-  const toggleTodo = (id) => {
-    dispatch({
-      type: "TOGGLE_TODO",
-      payload: id,
-    });
+  const clearData = () => {
+    dispatch({ type: "CLEAR" });
   };
 
   return (
-    <div className="container mt-5" style={{ maxWidth: "900px" }}>
-      <div
-        className="p-4"
-        style={{
-          background: "#7fe3ea",
-          borderRadius: "6px",
-          minHeight: "500px",
-        }}
-      >
-        <h1 className="fw-bold mb-3">TODO</h1>
+    <div className="container mt-5">
+      <h1>SWAPI</h1>
 
-        <div className="d-flex mb-5">
-          <input
-            type="text"
-            className="form-control me-2"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
-          <button className="btn btn-light" onClick={addTodo}>
-            Добавить
-          </button>
-        </div>
-
-        <h2 className="fw-bold mb-3">TODOS</h2>
-        <hr />
-
-        <div className="mb-4">
-          {todos.map((todo) => (
-            <div
-              key={todo.id}
-              onClick={() => toggleTodo(todo.id)}
-              className="mb-3 p-3"
-              style={{
-                background: "#f3e8d5",
-                border: "1px solid #777",
-                borderRadius: "12px",
-                cursor: "pointer",
-                textDecoration: todo.done ? "line-through" : "none",
-                opacity: todo.done ? 0.7 : 1,
-              }}
-            >
-              {todo.text}
-            </div>
-          ))}
-        </div>
-
-        <p className="fs-4">Всего: {todos.length}</p>
+      <div className="d-flex mb-3">
+        <input
+          className="form-control me-2"
+          value="https://swapi.py4e.com/api/people/1/"
+          readOnly
+        />
+        <button className="btn btn-secondary" onClick={fetchData}>
+          Get info
+        </button>
       </div>
+
+      <div className="border p-3" style={{ minHeight: "200px" }}>
+        {loading && <p>Loading...</p>}
+
+        {data && (
+          <pre>{JSON.stringify(data, null, 2)}</pre>
+        )}
+      </div>
+
+      <button className="btn btn-warning mt-3" onClick={clearData}>
+        Clear
+      </button>
     </div>
   );
 }
