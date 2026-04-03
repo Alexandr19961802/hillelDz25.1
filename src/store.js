@@ -1,27 +1,55 @@
 import { createStore, applyMiddleware } from "redux";
-import { thunk } from "redux-thunk";
+import createSagaMiddleware from "redux-saga";
+import rootSaga from "./saga";
 
 const initialState = {
-  data: null,
-  loading: false,
+  todos: [],
 };
 
 function reducer(state = initialState, action) {
   switch (action.type) {
-    case "FETCH_START":
-      return { ...state, loading: true };
+    case "SET_TODOS":
+      return { ...state, todos: action.payload };
 
-    case "FETCH_SUCCESS":
-      return { data: action.payload, loading: false };
+    case "ADD_TODO":
+      return { ...state, todos: [...state.todos, action.payload] };
+
+    case "DELETE_TODO":
+      return {
+        ...state,
+        todos: state.todos.filter((t) => t.id !== action.payload),
+      };
+
+    case "TOGGLE_TODO":
+      return {
+        ...state,
+        todos: state.todos.map((t) =>
+          t.id === action.payload ? { ...t, done: !t.done } : t
+        ),
+      };
+
+    case "EDIT_TODO":
+      return {
+        ...state,
+        todos: state.todos.map((t) =>
+          t.id === action.payload.id
+            ? { ...t, text: action.payload.text }
+            : t
+        ),
+      };
 
     case "CLEAR":
-      return { data: null, loading: false };
+      return { ...state, todos: [] };
 
     default:
       return state;
   }
 }
 
-const store = createStore(reducer, applyMiddleware(thunk));
+const sagaMiddleware = createSagaMiddleware();
+
+const store = createStore(reducer, applyMiddleware(sagaMiddleware));
+
+sagaMiddleware.run(rootSaga);
 
 export default store;
