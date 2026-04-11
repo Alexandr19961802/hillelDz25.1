@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Card,
@@ -19,6 +19,7 @@ function Todo() {
     { id: 1, text: "Сделать домашку", done: false },
     { id: 2, text: "Повторить Redux", done: true },
   ]);
+
   const [value, setValue] = useState("");
 
   const addTodo = () => {
@@ -32,6 +33,7 @@ function Todo() {
         done: false,
       },
     ]);
+
     setValue("");
   };
 
@@ -79,12 +81,20 @@ function Todo() {
                   }}
                 >
                   <ListItemText
-                    primary={todo.text}
-                    sx={{
-                      textDecoration: todo.done ? "line-through" : "none",
-                      opacity: todo.done ? 0.6 : 1,
-                    }}
+                    primary={
+                      <span
+                        style={{
+                          textDecoration: todo.done
+                            ? "line-through"
+                            : "none",
+                          opacity: todo.done ? 0.6 : 1,
+                        }}
+                      >
+                        {todo.text}
+                      </span>
+                    }
                   />
+
                   <Chip
                     label={todo.done ? "Готово" : "В процессе"}
                     color={todo.done ? "success" : "secondary"}
