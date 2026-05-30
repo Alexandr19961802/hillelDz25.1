@@ -1,0 +1,1 @@
+export default function About(){return <main className="wrap about"><h1>About SHOP.CO</h1><p>This page is included for the homework routes. The app has Main, About, products page, product details, cart, filters, add-to-cart and mobile burger menu.</p></main>}
