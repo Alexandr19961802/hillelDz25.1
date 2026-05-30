@@ -1,1 +1,25 @@
-{"scripts":{"dev":"vite","build":"vite build","preview":"vite preview"},"dependencies":{"@vitejs/plugin-react":"latest","vite":"latest","react":"latest","react-dom":"latest","react-router-dom":"latest","@reduxjs/toolkit":"latest","react-redux":"latest","axios":"latest","redux-saga":"latest","i18next":"latest","react-i18next":"latest"},"devDependencies":{}}
+{
+    "homepage": "https://Alexandr19961802.github.io/hillelDz25.1",
+    "scripts": {
+      "dev": "vite",
+      "build": "vite build",
+      "preview": "vite preview",
+      "deploy": "gh-pages -d dist"
+    },
+    "dependencies": {
+      "@reduxjs/toolkit": "latest",
+      "@vitejs/plugin-react": "latest",
+      "axios": "latest",
+      "i18next": "latest",
+      "react": "latest",
+      "react-dom": "latest",
+      "react-i18next": "latest",
+      "react-redux": "latest",
+      "react-router-dom": "latest",
+      "redux-saga": "latest",
+      "vite": "latest"
+    },
+    "devDependencies": {
+      "gh-pages": "^6.3.0"
+    }
+  }
